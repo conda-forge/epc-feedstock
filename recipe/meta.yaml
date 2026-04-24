@@ -1,33 +1,32 @@
 {% set name = "epc" %}
 {% set version = "0.0.5" %}
-{% set file_ext = "tar.gz" %}
-{% set hash_type = "sha256" %}
-{% set hash_value = "a14d2ea74817955a20eb00812e3a4630a132897eb4d976420240f1152c0d7d25" %}
 
 package:
   name: '{{ name|lower }}'
   version: '{{ version }}'
 
 source:
-  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
-  '{{ hash_type }}': '{{ hash_value }}'
+  fn: '{{ name }}-{{ version }}.tar.gz'
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  'sha256': 'a14d2ea74817955a20eb00812e3a4630a132897eb4d976420240f1152c0d7d25'
 
 build:
-  number: 0
+  number: 1
   noarch: python
-  script: python -m pip install --no-deps --ignore-installed .
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
-  build:
-    - python
+  host:
+    - python {{ python_min }}
     - pip
     - sexpdata >=0.0.3
   run:
-    - python
+    - python >={{ python_min }}
     - sexpdata >=0.0.3
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - epc
     - epc.tests
